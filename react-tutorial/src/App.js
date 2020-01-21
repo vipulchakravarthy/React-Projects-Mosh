@@ -9,22 +9,19 @@ import Counter from './components/Counter';
 import Click from './components/Click';
 import EventBind from './components/EventBind';
 import ParentComponent from './components/ParentComponent';
+import NameList from './components/NameList';
+import Stylesheet from "./components/Stylesheet";
+import InLine from './components/InLine';
+import './appStyles.css';
+import styles from './appStyles.module.css';
 
+import Form from './components/Form';
 
 class App extends Component {
   render(){
     return (
     <div className="App">
-    <ParentComponent />
-    {/* <Message></Message> */}
-    {/* <Counter></Counter> */}
-    {/* <Greet name="vipul" id = "12345"> 
-      <p>This is children props</p>
-    </Greet>
-    <Greet name="Tony Starck" id = "14567">
-    </Greet> */}
-    
-    {/* <EventBind /> */}
+      <Form />
     </div>
     );
   }
