@@ -6,9 +6,8 @@ import Counter from './components/Counter';
 class App extends Component {
   render(){
     return (
-    <div>
-      <Counter/>
-    </div>
+    <main className="container">
+      <h4>Hello Vipul!!</h4></main>
     );
   }
 }
