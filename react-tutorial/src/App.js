@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
-import MoviesComponent from './components/movies';
-
-
+import Counters from './components/Counters';
 class App extends Component {
   render(){
     return (
     <main className="container">
-     <MoviesComponent /></main>
+     <Counters /></main>
     );
   }
 }

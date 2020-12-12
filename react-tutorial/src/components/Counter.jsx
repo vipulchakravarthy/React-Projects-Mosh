@@ -2,20 +2,9 @@ import React, { Component } from 'react';
 
 class Counter extends Component {
     state = {
-        count : 0,
+        count : this.props.value,
         tags: ["tag1", 'tag2', 'tag3']
       }
-
-      componentWillUnmount(){
-        console.log("unmount called")
-      }
-      componentDidMount(){
-          console.log("mount called")
-      }
-      componentDidUpdate(){
-        console.log("update called")
-      }
-
     handleIncrement = () =>  {
         this.setState(prevState => ({
             count: prevState.count + 1
@@ -41,7 +30,8 @@ class Counter extends Component {
         </ul>) : (<p>There are no tags</p>)
     }
 
-    render() {         
+    render() {     
+        console.log(this.props)    
         return ( 
         <div>
             <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
