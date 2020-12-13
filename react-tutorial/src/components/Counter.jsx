@@ -1,41 +1,31 @@
 import React, { Component } from 'react';
 
 class Counter extends Component {
-    state = {
-        count : this.props.value,
-        tags: ["tag1", 'tag2', 'tag3']
-      }
-    handleIncrement = () =>  {
-        this.setState(prevState => ({
-            count: prevState.count + 1
-        }))
-        
-    }
 
 
     formatCount = () => {
-        return this.state.count> 0 ? this.state.count : "zero" 
+        return this.props.counter.value> 0 ? this.props.counter.value : "zero" 
     }
 
     getBadgeClasses() {
         let classes = "badge m-2 badge-";
-        classes += this.state.count > 0 ? "primary" : "warning";
+        classes += this.props.counter.value > 0 ? "primary" : "warning";
         return classes;
     }
 
-    renderTags = () => {
-        return this.state.tags.length >  0 ? 
-        (<ul>
-            {this.state.tags.map(tag => <li key={tag}>{tag}</li>)}
-        </ul>) : (<p>There are no tags</p>)
-    }
-
-    render() {     
-        console.log(this.props)    
+    render() {  
         return ( 
-        <div>
+        <div className="row">
+            <div className="col-1">
             <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
-            <button className="btn btn-secondary btn-sm" onClick={this.handleIncrement}>Increment</button>
+            </div>
+            <div className="col">
+            <button className="btn btn-secondary btn-sm m-2" onClick={() => this.props.onIncrement(this.props.counter)}>+</button>
+            <button className="btn btn-secondary btn-sm m-2" 
+            disabled={this.props.counter.value === 0 ? 'disabled' : ''}
+            onClick={() => this.props.onDecrement(this.props.counter)}>-</button>
+            <button className="btn btn-danger btn-sm" onClick={() => this.props.onDelete(this.props.counter.id)}>Delete</button>
+            </div>
         </div> );
     }
 }
