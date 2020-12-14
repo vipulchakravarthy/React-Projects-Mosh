@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Counters from './components/Counters';
+import MoviesComponent from './components/movies';
 import Navbar from './components/Navbar';
 class App extends Component {
   state = { 
@@ -52,13 +53,14 @@ handleReset = () => {
   render(){
     return (
       <>
-    <Navbar totalCounters={this.state.counters.filter(c => c.value > 0).length}/>
+      <MoviesComponent />
+    {/* <Navbar totalCounters={this.state.counters.filter(c => c.value > 0).length}/>
     <main className="container"> 
     <Counters 
     counters={this.state.counters}
     onReset={this.handleReset}
     onDecrement={this.handleDecrement} 
-    onIncrement = {this.handleIncrement} onDelete= {this.handleDelete}/></main>
+    onIncrement = {this.handleIncrement} onDelete= {this.handleDelete}/></main> */}
     </>
     );
   }
