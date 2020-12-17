@@ -3,13 +3,16 @@ import _ from 'lodash';
 
 function Pagination(props) {
 
-    const pagesCount = Math.ceil(props.itemsCount/props.pageSize);
+    const {itemsCount, pageSize, onPageChange, currentPage} = props;
+    const pagesCount = Math.ceil(itemsCount/pageSize);
     const pages = _.range(1, pagesCount+1);
+
     if(pagesCount === 1) return null;
     return (
         <nav>
-            <ul className="pagination">
-                {pages.map((item, index) => <li key = {index} className="page-item"><a href="" className="page-link">{item}</a></li>)}
+            <ul className="pagination" style={{alignContent: 'center', justifyContent: "center"}}>
+                {pages.map((page, index) => <li key = {index} className={page === currentPage ? "page-item active": "page-item"}>
+                    <a className="page-link" onClick={() => onPageChange(page)}>{page}</a></li>)}
             </ul>
         </nav>
     );
