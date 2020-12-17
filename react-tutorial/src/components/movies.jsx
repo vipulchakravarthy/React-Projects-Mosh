@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import {getMovies} from '../services/fakeMovieService';
+import { paginate } from '../utils/Paginate';
 
 import Like from './common/Like';
 import Pagination from './common/Pagination';
 class MoviesComponent extends Component {
     state = { 
         movies: getMovies(),
-        pageSize: 4
+        pageSize: 4,
+        currentPage: 1
     }
 
     handleDelete = (movie)  => {
-        const newMovies = this.state.movies.filter(m =>  movie._id != m._id)
+        const newMovies = this.state.movies.filter(m =>  movie._id !== m._id)
         this.setState(
             {
                 movies: newMovies
@@ -29,12 +31,17 @@ class MoviesComponent extends Component {
         })
     }
 
-    handlePageChange = () => {
-        console.log("page changed")
+    handlePageChange = (page) => {
+        this.setState({
+            currentPage: page
+        })
     }
 
     render() {
+        
         if (this.state.movies.length === 0) return (<p>There are no movies</p>)
+        const movies = paginate(this.state.movies, this.state.currentPage, this.state.pageSize)
+        console.log(movies)
         return (
             <div style={{marginTop: 20 }}>
                 <p>There are {this.state.movies.length} movies in database</p>
@@ -50,7 +57,7 @@ class MoviesComponent extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.movies.map((movie, index) => {
+                        {movies.map((movie, index) => {
                             return (<tr key={index}>
                              <td>{movie.title}</td>
                              <td>{movie.genre.name}</td>
@@ -64,7 +71,9 @@ class MoviesComponent extends Component {
                         })}
                     </tbody>
                 </table>
-                <Pagination itemsCount={this.state.movies.length} pageSize={this.state.pageSize} onPageChange={this.handlePageChange}/>
+                <Pagination 
+                currentPage={this.state.currentPage}
+                itemsCount={this.state.movies.length} pageSize={this.state.pageSize} onPageChange={this.handlePageChange}/>
             </div>
         );
     }
