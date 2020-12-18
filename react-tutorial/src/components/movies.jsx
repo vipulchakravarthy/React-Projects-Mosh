@@ -1,14 +1,25 @@
 import React, { Component } from 'react';
+import { getGenres } from '../services/fakeGenreService';
 import {getMovies} from '../services/fakeMovieService';
 import { paginate } from '../utils/Paginate';
 
 import Like from './common/Like';
+import ListGroup from './common/ListGroup';
 import Pagination from './common/Pagination';
 class MoviesComponent extends Component {
     state = { 
-        movies: getMovies(),
+        movies:[],
+        genres: [],
         pageSize: 4,
-        currentPage: 1
+        currentPage: 1,
+        selectedGenre: 'Action',
+    }
+
+    componentDidMount(){
+        this.setState({
+            genres: getGenres(),
+            movies: getMovies()
+        })
     }
 
     handleDelete = (movie)  => {
@@ -21,7 +32,6 @@ class MoviesComponent extends Component {
     }
 
     handleLike = (movie) => {
-        console.log("clicked", movie);
         const movies = [...this.state.movies];
         const index = movies.indexOf(movie);
         movies[index] = {...movies[index]};
@@ -37,13 +47,27 @@ class MoviesComponent extends Component {
         })
     }
 
+    handleGenreSelect = (genre) => {
+        console.log(genre)
+        this.setState({
+            selectedGenre: genre
+        })
+    }
+
     render() {
         
         if (this.state.movies.length === 0) return (<p>There are no movies</p>)
         const movies = paginate(this.state.movies, this.state.currentPage, this.state.pageSize)
-        console.log(movies)
         return (
-            <div style={{marginTop: 20 }}>
+            <div className="container">
+            <div className="row" style={{marginTop: 20}}>
+                <div className="col-3">
+                    <ListGroup 
+                    items={this.state.genres} 
+                    selectedItem={this.state.selectedGenre}
+                    onItemSelect={this.handleGenreSelect}/>
+                </div>
+                <div className="col">
                 <p>There are {this.state.movies.length} movies in database</p>
                 <table className="table">
                     <thead>
@@ -74,6 +98,9 @@ class MoviesComponent extends Component {
                 <Pagination 
                 currentPage={this.state.currentPage}
                 itemsCount={this.state.movies.length} pageSize={this.state.pageSize} onPageChange={this.handlePageChange}/>
+                </div>
+                
+            </div>
             </div>
         );
     }
