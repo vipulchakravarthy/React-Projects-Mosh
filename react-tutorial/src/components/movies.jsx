@@ -13,10 +13,11 @@ class MoviesComponent extends Component {
         pageSize: 4,
         currentPage: 1,
         selectedGenre: '',
+        sortBy: {path: 'title', order: 'asc'},
     }
 
     componentDidMount(){
-        const genres = [{name: "All Genres"}, ...getGenres()]
+        const genres = [{_id: "", name: "All Genres"}, ...getGenres()]
         this.setState({
             genres,
             movies: getMovies(),
@@ -56,12 +57,20 @@ class MoviesComponent extends Component {
         })
     }
 
+    handleSort = (path) => {
+        console.log(path);
+        this.setState({
+            sortBy: {path, order: 'asc'}
+        })
+    }
+
     render() {
         
         if (this.state.movies.length === 0) return (<p>There are no movies</p>)
 
         const {movies: allMovies, currentPage, pageSize, selectedGenre } = this.state;
         const filtered = selectedGenre && selectedGenre._id? allMovies.filter(m => m.genre._id === selectedGenre._id) : allMovies
+        // _.orderBy()
         const movies = paginate(filtered, currentPage, pageSize)
         return (
             <div className="container">
@@ -78,6 +87,7 @@ class MoviesComponent extends Component {
                 movies={movies}
                 onLike={this.handleLike}
                 onDelete={this.handleDelete}
+                onSort ={this.handleSort}
                 />
                 <Pagination 
                 currentPage={currentPage}
