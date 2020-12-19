@@ -3,22 +3,25 @@ import { getGenres } from '../services/fakeGenreService';
 import {getMovies} from '../services/fakeMovieService';
 import { paginate } from '../utils/Paginate';
 
-import Like from './common/Like';
 import ListGroup from './common/ListGroup';
 import Pagination from './common/Pagination';
+import MoviesTable from './moviesTable';
 class MoviesComponent extends Component {
     state = { 
         movies:[],
         genres: [],
         pageSize: 4,
         currentPage: 1,
-        selectedGenre: 'Action',
+        selectedGenre: '',
+        sortBy: {path: 'title', order: 'asc'},
     }
 
     componentDidMount(){
+        const genres = [{_id: "", name: "All Genres"}, ...getGenres()]
         this.setState({
-            genres: getGenres(),
-            movies: getMovies()
+            genres,
+            movies: getMovies(),
+
         })
     }
 
@@ -48,16 +51,27 @@ class MoviesComponent extends Component {
     }
 
     handleGenreSelect = (genre) => {
-        console.log(genre)
         this.setState({
-            selectedGenre: genre
+            selectedGenre: genre,
+            currentPage: 1
+        })
+    }
+
+    handleSort = (path) => {
+        console.log(path);
+        this.setState({
+            sortBy: {path, order: 'asc'}
         })
     }
 
     render() {
         
         if (this.state.movies.length === 0) return (<p>There are no movies</p>)
-        const movies = paginate(this.state.movies, this.state.currentPage, this.state.pageSize)
+
+        const {movies: allMovies, currentPage, pageSize, selectedGenre } = this.state;
+        const filtered = selectedGenre && selectedGenre._id? allMovies.filter(m => m.genre._id === selectedGenre._id) : allMovies
+        // _.orderBy()
+        const movies = paginate(filtered, currentPage, pageSize)
         return (
             <div className="container">
             <div className="row" style={{marginTop: 20}}>
@@ -68,38 +82,17 @@ class MoviesComponent extends Component {
                     onItemSelect={this.handleGenreSelect}/>
                 </div>
                 <div className="col">
-                <p>There are {this.state.movies.length} movies in database</p>
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Genre</th>
-                            <th>Stock</th>
-                            <th>Rate</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {movies.map((movie, index) => {
-                            return (<tr key={index}>
-                             <td>{movie.title}</td>
-                             <td>{movie.genre.name}</td>
-                             <td>{movie.numberInStock}</td>
-                             <td>{movie.dailyRentalRate}</td>
-                             <td><Like liked={movie.liked} onClick={() => this.handleLike(movie)}/></td>
-                             <td>
-                                 <button onClick={() => this.handleDelete(movie) } className="btn btn-danger sm">delete</button>
-                             </td>
-                         </tr>)
-                        })}
-                    </tbody>
-                </table>
+                <p>There are {filtered.length} movies in database</p>
+                <MoviesTable 
+                movies={movies}
+                onLike={this.handleLike}
+                onDelete={this.handleDelete}
+                onSort ={this.handleSort}
+                />
                 <Pagination 
-                currentPage={this.state.currentPage}
-                itemsCount={this.state.movies.length} pageSize={this.state.pageSize} onPageChange={this.handlePageChange}/>
+                currentPage={currentPage}
+                itemsCount={filtered.length} pageSize={pageSize} onPageChange={this.handlePageChange}/>
                 </div>
-                
             </div>
             </div>
         );
