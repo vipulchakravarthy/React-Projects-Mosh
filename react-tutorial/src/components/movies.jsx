@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { getGenres } from '../services/fakeGenreService';
 import {getMovies} from '../services/fakeMovieService';
 import { paginate } from '../utils/Paginate';
+import _, { sortBy } from 'lodash';
 
 import ListGroup from './common/ListGroup';
 import Pagination from './common/Pagination';
@@ -59,8 +60,16 @@ class MoviesComponent extends Component {
 
     handleSort = (path) => {
         console.log(path);
+        const sortBy = {...this.state.sortBy}
+        if(sortBy.path === path){
+            sortBy.order = sortBy.order === 'asc' ? 'desc' : 'asc'
+        }
+        else{
+            sortBy.path = path;
+            sortBy.order = 'asc'
+        }
         this.setState({
-            sortBy: {path, order: 'asc'}
+            sortBy
         })
     }
 
@@ -68,10 +77,10 @@ class MoviesComponent extends Component {
         
         if (this.state.movies.length === 0) return (<p>There are no movies</p>)
 
-        const {movies: allMovies, currentPage, pageSize, selectedGenre } = this.state;
+        const {movies: allMovies, currentPage, pageSize, selectedGenre, sortBy } = this.state;
         const filtered = selectedGenre && selectedGenre._id? allMovies.filter(m => m.genre._id === selectedGenre._id) : allMovies
-        // _.orderBy()
-        const movies = paginate(filtered, currentPage, pageSize)
+        const sorted = _.orderBy(filtered, [sortBy.path], [sortBy.order])
+        const movies = paginate(sorted, currentPage, pageSize)
         return (
             <div className="container">
             <div className="row" style={{marginTop: 20}}>
