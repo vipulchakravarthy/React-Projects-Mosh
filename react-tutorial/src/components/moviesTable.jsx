@@ -1,11 +1,9 @@
-import { rearg } from 'lodash';
 import React from 'react';
 
 import Like from './common/Like';
 import Table from './common/table';
 
 
-const x = <Like></Like>;
 class MoviesTable extends React.Component{
     columns =[
         {path: 'title', label: 'Title'},
