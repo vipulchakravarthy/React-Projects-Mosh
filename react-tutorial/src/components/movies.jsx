@@ -58,16 +58,7 @@ class MoviesComponent extends Component {
         })
     }
 
-    handleSort = (path) => {
-        console.log(path);
-        const sortBy = {...this.state.sortBy}
-        if(sortBy.path === path){
-            sortBy.order = sortBy.order === 'asc' ? 'desc' : 'asc'
-        }
-        else{
-            sortBy.path = path;
-            sortBy.order = 'asc'
-        }
+    handleSort = (sortBy) => {
         this.setState({
             sortBy
         })
@@ -94,6 +85,7 @@ class MoviesComponent extends Component {
                 <p>There are {filtered.length} movies in database</p>
                 <MoviesTable 
                 movies={movies}
+                sortBy={sortBy}
                 onLike={this.handleLike}
                 onDelete={this.handleDelete}
                 onSort ={this.handleSort}
