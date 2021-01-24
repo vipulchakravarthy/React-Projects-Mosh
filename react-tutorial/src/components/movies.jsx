@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { getGenres } from '../services/fakeGenreService';
 import {getMovies} from '../services/fakeMovieService';
 import { paginate } from '../utils/Paginate';
-import _, { sortBy } from 'lodash';
+import _, { filter, sortBy } from 'lodash';
 
 import ListGroup from './common/ListGroup';
 import Pagination from './common/Pagination';
@@ -64,14 +64,22 @@ class MoviesComponent extends Component {
         })
     }
 
-    render() {
-        
-        if (this.state.movies.length === 0) return (<p>There are no movies</p>)
-
+    getPagedData = () => {
         const {movies: allMovies, currentPage, pageSize, selectedGenre, sortBy } = this.state;
         const filtered = selectedGenre && selectedGenre._id? allMovies.filter(m => m.genre._id === selectedGenre._id) : allMovies
         const sorted = _.orderBy(filtered, [sortBy.path], [sortBy.order])
         const movies = paginate(sorted, currentPage, pageSize)
+        return { totalCount: filtered.length, data: movies}
+    }
+
+    render() {
+        
+        if (this.state.movies.length === 0) return (<p>There are no movies</p>)
+
+        const {currentPage, pageSize, sortBy } = this.state;
+        
+        const {totalCount, data: movies} = this.getPagedData()
+
         return (
             <div className="container">
             <div className="row" style={{marginTop: 20}}>
@@ -82,7 +90,7 @@ class MoviesComponent extends Component {
                     onItemSelect={this.handleGenreSelect}/>
                 </div>
                 <div className="col">
-                <p>There are {filtered.length} movies in database</p>
+                <p>There are {totalCount} movies in database</p>
                 <MoviesTable 
                 movies={movies}
                 sortBy={sortBy}
@@ -92,7 +100,7 @@ class MoviesComponent extends Component {
                 />
                 <Pagination 
                 currentPage={currentPage}
-                itemsCount={filtered.length} pageSize={pageSize} onPageChange={this.handlePageChange}/>
+                itemsCount={totalCount} pageSize={pageSize} onPageChange={this.handlePageChange}/>
                 </div>
             </div>
             </div>
