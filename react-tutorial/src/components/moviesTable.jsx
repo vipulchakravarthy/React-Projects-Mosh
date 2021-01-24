@@ -2,8 +2,8 @@ import { rearg } from 'lodash';
 import React from 'react';
 
 import Like from './common/Like';
-import TableBody from './common/tableBody';
-import TableHeader from './common/tableHeader'
+import Table from './common/table';
+
 
 const x = <Like></Like>;
 class MoviesTable extends React.Component{
@@ -20,12 +20,12 @@ class MoviesTable extends React.Component{
         const {movies, sortBy, onSort} = this.props
     return (
         <div>
-           <table className="table">
-                    <TableHeader columns={this.columns}
-                     sortBy={sortBy}
-                     onSort={onSort}/>
-                    <TableBody data={movies} columns={this.columns}/>
-                </table> 
+           <Table 
+           columns={this.columns}
+           data={movies}
+           sortBy={sortBy}
+           onSort={onSort}
+           />
         </div>
     );
     }
