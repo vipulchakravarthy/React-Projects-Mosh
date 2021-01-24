@@ -17,7 +17,7 @@ class MoviesTable extends React.Component{
     ]
     
     render(){  
-        const {movies, onDelete, onLike, sortBy, onSort} = this.props
+        const {movies, sortBy, onSort} = this.props
     return (
         <div>
            <table className="table">
