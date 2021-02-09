@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import Customers from './customers';
+import React from 'react';
 import {Link, NavLink} from 'react-router-dom';
 
 const NavBar = () => {

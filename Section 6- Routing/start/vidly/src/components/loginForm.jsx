@@ -16,7 +16,6 @@ class LoginForm extends Component {
     }
 
     handleChange = ({currentTarget: input}) => {
-        console.log("called change")
         const account = {...this.state.account}
         account[input.name] = input.value;
         this.setState({account})
