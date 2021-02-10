@@ -16,6 +16,7 @@ class LoginForm extends Component {
         password: Joi.string().required().label('Password')
     }
     handleSubmit = (e) => {
+        console.log("button clicked")
         e.preventDefault();
         const errors = this.validate();
         this.setState({errors:errors || {}})
@@ -70,7 +71,9 @@ class LoginForm extends Component {
                     label="password"
                     value={account.password} name='password'
                     error={errors.password} />
-                <button className="btn-primary">Login</button>
+                <button 
+                disabled={this.validate()}
+                className="btn-primary">Login</button>
             </form>
         </div> );
     }
