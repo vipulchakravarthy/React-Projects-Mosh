@@ -7,13 +7,18 @@ import { getGenres } from "../services/fakeGenreService";
 import { paginate } from "../utils/paginate";
 import _ from "lodash";
 
+import { Link } from 'react-router-dom';
+import SearchBox from "./common/searchBox";
+
 class Movies extends Component {
   state = {
     movies: [],
     genres: [],
+    searchQuery: "",
+    selectedGenre: null,
     currentPage: 1,
     pageSize: 4,
-    sortColumn: { path: "title", order: "asc" }
+    sortColumn: { path: "title", order: "asc" },
   };
 
   componentDidMount() {
@@ -40,8 +45,12 @@ class Movies extends Component {
   };
 
   handleGenreSelect = genre => {
-    this.setState({ selectedGenre: genre, currentPage: 1 });
+    this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 });
   };
+
+  handleSearch = query => {
+    this.setState({selectedGenre: null, searchQuery: query, currentPage: 1})
+  }
 
   handleSort = sortColumn => {
     this.setState({ sortColumn });
@@ -53,14 +62,20 @@ class Movies extends Component {
       currentPage,
       sortColumn,
       selectedGenre,
+      searchQuery,
       movies: allMovies
     } = this.state;
 
-    const filtered =
-      selectedGenre && selectedGenre._id
-        ? allMovies.filter(m => m.genre._id === selectedGenre._id)
-        : allMovies;
+    let filtered =allMovies
 
+    if(searchQuery){
+      filtered = allMovies.filter(m => 
+        m.title.toLowerCase().startsWith(searchQuery.toLowerCase()))
+    }
+    else if(selectedGenre && selectedGenre._id){
+      filtered = allMovies.filter(m => m.genre._id === selectedGenre._id)
+    }
+    
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 
     const movies = paginate(sorted, currentPage, pageSize);
@@ -86,6 +101,14 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
+          <Link 
+          to="/movies/new"
+          className="btn btn-primary"
+          style={{marginButton: 20}}
+          >
+            New movie
+          </Link>
+          <SearchBox value={this.state.searchQuery} onChange={this.handleSearch}/>
           <p>Showing {totalCount} movies in the database.</p>
           <MoviesTable
             movies={movies}
